@@ -64,8 +64,8 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           api.login(this.userForm).then((res) => {
-            this.$message.success('success');
             this.$store.dispatch('setUserInfo', res);
+            this.$message.success(`欢迎${this.$store.state.user.username}`);
             this.$router.push({
               name: 'Home',
             });
