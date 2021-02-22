@@ -10,7 +10,7 @@
       </a-breadcrumb>
     </div>
     <ul class="user-info">
-      <li>欢迎</li>
+      <li>欢迎{{$store.state.user.username}}</li>
       <li>退出</li>
     </ul>
   </div>
