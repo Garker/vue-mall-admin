@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d0a3a98"],{"02aa":function(e,n,a){"use strict";a.r(n);var t=function(){var e=this,n=e.$createElement,a=e._self._c||n;return a("div",[e._v(" 添加商品 ")])},c=[],u={name:"productAdd"},r=u,d=a("2877"),o=Object(d["a"])(r,t,c,!1,null,"0a328e42",null);n["default"]=o.exports}}]);
+//# sourceMappingURL=chunk-2d0a3a98.97078237.js.map
