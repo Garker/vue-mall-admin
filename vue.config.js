@@ -11,6 +11,6 @@ module.exports = {
     config.resolve.alias
       .set('@', resolve('src'));
   },
-  publicPath: process.env.NODE_ENV ? '/vue-mall-admin/' : '/',
+  publicPath: './',
   outputDir: 'docs',
 };

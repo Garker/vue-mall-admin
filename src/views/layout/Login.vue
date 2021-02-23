@@ -46,8 +46,8 @@ export default {
     };
     return {
       userForm: {
-        email: '200571164@qq.com',
-        password: 123456,
+        email: '',
+        password: '',
       },
       rules: {
         password: [{ validator: validatePass, trigger: 'change' }],
