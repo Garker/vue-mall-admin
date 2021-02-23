@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import VCharts from 'v-charts';
 import Antd from 'ant-design-vue';
 import App from './App.vue';
 import router from './router';
@@ -9,6 +10,7 @@ import './assets/css/reset.less';
 Vue.config.productionTip = false;
 
 Vue.use(Antd);
+Vue.use(VCharts);
 
 new Vue({
   router,
