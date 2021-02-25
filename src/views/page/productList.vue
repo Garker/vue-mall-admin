@@ -1,24 +1,28 @@
 <template>
-  <div>
-    <!--  搜索  -->
-    <Search @submit="searchSubmit" :categoryList="categoryList" :page="page"/>
-    <!--  表格   -->
-    <products-table :data="tableData" @change="changePage"/>
+  <div class="product-list">
+    <!-- 搜索 -->
+    <search-box @submit="searchSubmit" :categoryList="categoryList"/>
+    <!-- 表格 -->
+    <productTable :data="tableData"
+                  :page="page"
+                  @change="changePage"
+                  :categoryList="categoryList"
+                  @edit="editProduct"
+                  @remove="removeProduct"/>
   </div>
 </template>
+
 <script>
-import Search from '@/components/search.vue';
-import productsTable from '@/components/productsTable.vue';
-import categoryApi from '@/api/category';
+import searchBox from '@/components/search.vue';
+import productTable from '@/components/productsTable.vue';
 import api from '@/api/products';
+import categoryApi from '@/api/category';
 
 export default {
-  components: {
-    Search,
-    productsTable,
-  },
   data() {
     return {
+      tableData: [],
+      searchForm: {},
       categoryList: [],
       page: {
         current: 1,
@@ -26,36 +30,68 @@ export default {
         showSizeChanger: true,
         total: 1,
       },
-      tableData: [],
-      categoryObj: [],
+      categoryObj: {},
     };
   },
+  components: {
+    searchBox,
+    productTable,
+  },
   async created() {
-    const { data } = await categoryApi.list();
-    this.categoryList = data;
-    data.forEach((item) => {
-      this.categoryObj[item.id] = item;
+    await categoryApi.list().then((res) => {
+      this.categoryList = res.data;
+      res.data.forEach((item) => {
+        this.categoryObj[item.id] = item;
+      });
     });
     this.getTableData();
   },
   methods: {
-    searchSubmit(page) {
-      console.log(page);
+    searchSubmit(form) {
+      this.searchForm = form;
+      this.getTableData();
     },
-    async getTableData() {
-      const res = await api.list({
+    getTableData() {
+      api.list({
         page: this.page.current,
         size: this.page.pageSize,
+        ...this.searchForm,
+      }).then((res) => {
+        this.page.total = res.total;
+        this.tableData = res.data.map((item) => ({
+          ...item,
+          categoryName: this.categoryObj[item.category].name,
+        }));
       });
-      this.page.total = res.total;
-      this.tableData = res.data.map((item) => ({
-        ...item,
-        categoryName: this.categoryObj[item.category].name,
-      }));
     },
     changePage(page) {
       this.page = page;
       this.getTableData();
+    },
+    editProduct(record) {
+      this.$router.push({
+        name: 'ProductEdit',
+        params: {
+          id: record.id,
+        },
+      });
+    },
+    removeProduct(record) {
+      this.$confirm({
+        title: '确认删除',
+        content: () => <div style="color:red;">{`确认删除标题为:${record.title}的商品吗`}</div>,
+        onOk: () => {
+          api.remove({
+            id: record.id,
+          }).then(() => {
+            this.getTableData();
+          });
+        },
+        onCancel() {
+          console.log('Cancel');
+        },
+        class: 'confirm-box',
+      });
     },
   },
 };
