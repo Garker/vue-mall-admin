@@ -42,14 +42,26 @@ const ayncRouterMap = [{
       hidden: false,
     },
     component: () => import('@/views/page/category.vue'),
-  }],
-}];
+  }, {
+    path: 'edit/:id',
+    name: 'ProductEdit',
+    meta: {
+      title: '编辑商品',
+      icon: 'file-add',
+      hidden: true,
+    },
+    component: () => import('@/views/page/productAdd.vue'),
+  },
+  ],
 
+},
+];
 const routes = [
   {
     path: '/',
     name: 'Home',
     component: Home,
+    redirect: '/index',
     meta: {
       title: '首页',
       hidden: false,

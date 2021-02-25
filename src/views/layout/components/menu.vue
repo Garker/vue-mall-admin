@@ -13,12 +13,14 @@
         <span slot="title"><a-icon :type="router.meta.icon"/>
           <span>{{router.meta.title}}</span>
         </span>
-        <a-menu-item v-for="child in router.children" :key="child.name">
-          <router-link :to="{name: child.name}">
-            <a-icon :type="child.meta.icon" />
-            {{child.meta.title}}
-          </router-link>
-        </a-menu-item>
+        <template  v-for="child in router.children">
+          <a-menu-item v-if="!child.meta.hidden"  :key="child.name">
+            <router-link :to="{name: child.name}">
+              <a-icon :type="child.meta.icon" />
+              {{child.meta.title}}
+            </router-link>
+          </a-menu-item>
+        </template>
       </a-sub-menu>
     </a-menu>
   </div>
