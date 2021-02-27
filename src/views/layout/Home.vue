@@ -1,26 +1,34 @@
 <template>
   <div class="home">
-    <left-menu/>
-    <div :class="{'main-app':true,'menu-unfold':$store.state.collapsed}">
-      <slider-nav/>
+    <left-menu :key="key"></left-menu>
+    <div :class="{'main-app': true, 'extend-app': $store.state.collapsed}">
+      <slider-nav></slider-nav>
       <router-view></router-view>
     </div>
   </div>
 </template>
 
 <script>
-import LeftMenu from './components/menu.vue';
-import SliderNav from './components/sliderNav.vue';
+import leftMenu from './components/menu.vue';
+import sliderNav from './components/sliderNav.vue';
 
 export default {
   data() {
     return {
-      collapsed: false,
+      key: new Date().getTime(),
     };
   },
+  watch: {
+    $route() {
+      this.key = new Date().getTime();
+    },
+  },
   components: {
-    LeftMenu,
-    SliderNav,
+    leftMenu,
+    sliderNav,
+  },
+  methods: {
+
   },
 };
 </script>

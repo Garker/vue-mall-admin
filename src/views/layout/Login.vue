@@ -1,22 +1,19 @@
 <template>
   <div class="login">
-    <a-form-model
-      class="login-form"
-      ref="userForm"
-      :model="userForm"
-      :rules="rules"
-      v-bind="layout">
-      <a-form-model-item has-feedback label="邮箱" prop="email" >
-        <a-input v-model="userForm.email" />
+    <a-form-model class="login-form"
+                  ref="loginForm" :model="loginForm" :rules="rules" v-bind="layout">
+      <a-form-model-item has-feedback label="邮箱" prop="email">
+        <a-input v-model="loginForm.email" />
       </a-form-model-item>
       <a-form-model-item has-feedback label="密码" prop="password">
-        <a-input v-model="userForm.password" type="password" autocomplete="off" />
+        <a-input v-model="loginForm.password" type="password" autocomplete="off" />
       </a-form-model-item>
+
       <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type="primary" @click="submitForm('userForm')">
+        <a-button type="primary" @click="submitForm('loginForm')">
           提交
         </a-button>
-        <a-button style="margin-left: 10px" @click="resetForm('userForm')">
+        <a-button style="margin-left: 10px" @click="resetForm('loginForm')">
           重置
         </a-button>
       </a-form-model-item>
@@ -28,7 +25,7 @@ import api from '@/api/user';
 
 export default {
   data() {
-    const emailReg = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
+    const emailReg = /^[\w-]+@[\w.-]+.com$/;
     const checkEmail = (rule, value, callback) => {
       if (!value) {
         return callback(new Error('请输入邮箱'));
@@ -36,18 +33,19 @@ export default {
       if (emailReg.test(value)) {
         return callback();
       }
-      return callback(new Error('邮箱格式错误'));
+      return callback(new Error('邮箱格式不正确'));
     };
     const validatePass = (rule, value, callback) => {
       if (value === '') {
-        return callback(new Error('请输入密码'));
+        callback(new Error('请输入密码'));
+      } else {
+        callback();
       }
-      return callback();
     };
     return {
-      userForm: {
-        email: '200571164@qq.com',
-        password: 123456,
+      loginForm: {
+        password: '',
+        email: '',
       },
       rules: {
         password: [{ validator: validatePass, trigger: 'change' }],
@@ -63,9 +61,9 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          api.login(this.userForm).then((res) => {
+          api.login(this.loginForm).then((res) => {
+            console.log(res);
             this.$store.dispatch('setUserInfo', res);
-            this.$message.success(`欢迎${this.$store.state.user.username}`);
             this.$router.push({
               name: 'Home',
             });
@@ -74,6 +72,7 @@ export default {
           });
           return true;
         }
+        console.log('error submit!!');
         return false;
       });
     },
@@ -83,6 +82,7 @@ export default {
   },
 };
 </script>
+
 <style lang="less">
-  @import url("~@/assets/css/login.less");
+  @import url('~@/assets/css/login.less');
 </style>

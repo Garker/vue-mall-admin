@@ -1,7 +1,10 @@
 <template>
   <div class="product-list">
     <!-- 搜索 -->
-    <search-box @submit="searchSubmit" :categoryList="categoryList"/>
+    <search-box @submit="searchSubmit" :categoryList="categoryList" />
+    <a-button class="product-add-btn">
+      <router-link :to="{name: 'ProductAdd'}">添加商品</router-link>
+    </a-button>
     <!-- 表格 -->
     <productTable :data="tableData"
                   :page="page"
@@ -52,17 +55,20 @@ export default {
       this.getTableData();
     },
     getTableData() {
-      api.list({
-        page: this.page.current,
-        size: this.page.pageSize,
-        ...this.searchForm,
-      }).then((res) => {
-        this.page.total = res.total;
-        this.tableData = res.data.map((item) => ({
-          ...item,
-          categoryName: this.categoryObj[item.category].name,
-        }));
-      });
+      api
+        .list({
+          page: this.page.current,
+          size: this.page.pageSize,
+          ...this.searchForm,
+        })
+        .then((res) => {
+          console.log(res);
+          this.page.total = res.total;
+          this.tableData = res.data.map((item) => ({
+            ...item,
+            categoryName: this.categoryObj[item.category].name,
+          }));
+        });
     },
     changePage(page) {
       this.page = page;
@@ -84,6 +90,7 @@ export default {
           api.remove({
             id: record.id,
           }).then(() => {
+            console.log(this);
             this.getTableData();
           });
         },
@@ -96,3 +103,14 @@ export default {
   },
 };
 </script>
+
+<style lang="less">
+  .product-list {
+    position: relative;
+    .product-add-btn {
+      position: absolute;
+      right: 10px;
+      top: 14px;
+    }
+  }
+</style>
